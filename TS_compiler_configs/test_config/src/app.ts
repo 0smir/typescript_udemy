@@ -1,5 +1,5 @@
 import fs from 'node:fs';
-
+// fs.readFileSync();
 let userName: string = 'Max';
 
 console.log(userName);
