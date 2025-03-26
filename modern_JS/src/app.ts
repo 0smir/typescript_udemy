@@ -44,4 +44,4 @@ console.log(otherHobbies);
 
 const { userName: firstName, age } = person;
 
-console.log(firstName, age); // firstName it is alias for userName key
+console.log(firstName, age); // firstName is alias for userName key
