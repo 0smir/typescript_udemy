@@ -48,3 +48,13 @@ function mergObjUT<T extends object, U extends object>(a: T, b: U) {// same as p
   // bouth params extends object
   return { ...a, ...b }
 }
+
+
+//============= Generic Classes =========
+
+class UserUnit<T> {
+  constructor(public id: T) { }
+}
+
+const user_un = new UserUnit('i1');
+user_un.id
