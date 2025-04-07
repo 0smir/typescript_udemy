@@ -18,3 +18,9 @@ store.name = 'Helga';
 store.isInstruct = false;
 
 let namestore: DataStorage<string> = {};
+
+//========== Generic functions =============
+
+function merge<T>(a: T, b: T) {
+  return [a, b]
+}
