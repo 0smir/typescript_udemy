@@ -24,3 +24,11 @@ let namestore: DataStorage<string> = {};
 function merge<T>(a: T, b: T) {
   return [a, b]
 }
+
+const ids = merge(1, 2);
+
+function mergeAll<T, U>(a: T, b: U) { // you can assign types as may as you need 
+  return [a, b]
+}
+
+const arrayResult = mergeAll(1, 'Helga');
