@@ -28,8 +28,8 @@ type Perms = AppUser['permission']; // extracting of type that's stored (setuped
 //======================== example of usage ===========
 
 type Perm = Perms[number]; // asking of TS to get elements with index
-
+// return nested object thet storred in arry
 
 type Names = string[];
-type Name = Names[number];
+type Name = Names[number]; // could be rewriten as Names[2];
 
