@@ -17,9 +17,25 @@ function logger<T extends new (...args: any[]) => any>(target: T, ctx: ClassDeco
   };
 }
 
+// metod decorator for greet
+function autobind(target: (...args: any[]) => any, ctx: ClassMethodDecoratorContext) {
+  console.log('target: ', target);
+  console.log('ctx: ', ctx);
+
+  ctx.addInitializer(function (this: any) {//addInitializer is build in method. 
+    //In arguments should be normal function (not arrow), and this function should have as argument "this: any"
+    this[ctx.name] = this[ctx.name].bind(this);
+  });
+}
+
 @logger
 class Personitem {
   name = "Helga";
+  // constructor() { added to resolve greet(); error
+  //   this.greet = this.greet.bind(this);
+  // }
+
+  @autobind
   greet() {
     console.log('hello, I am ' + this.name + '!');
   }
@@ -32,9 +48,9 @@ console.log(helga); // Personitem { name: 'Helga', age: 33 }
 
 const max = new Personitem();
 
-
-
-
+const greet = max.greet;
+max.greet(); // correct expressin even if we not use autobind-decorator
+greet(); // return error if not use constructor or autobind-decorator in Personitem
 
 
 
