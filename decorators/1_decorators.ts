@@ -37,9 +37,29 @@ function autobind(target: (...args: any[]) => any, ctx: ClassMethodDecoratorCont
   }
 }
 
+
+
+
+//================= factory ===========
+function replacer<T>(initVal: T) {
+  // target: undefined - because decorator code will execute before field is done initializing
+  return function replacerDecorator(target: undefined, ctx: ClassFieldDecoratorContext) {
+    console.log('fieldLogger: ', target);
+    console.log('fieldLogger', ctx);
+
+    //you can change the field or to be precise that value
+    return (initialValue: any) => {
+      console.log(initialValue);// show initial value
+      return initVal;// overighte initial value
+    }
+  };
+}
+
 @logger
 class Personitem {
-  name = "Helga";
+  // @fieldLogger
+  @replacer('***')
+  name = "Helga";// field
   // constructor() { added to resolve greet(); error
   //   this.greet = this.greet.bind(this);
   // }
