@@ -19,13 +19,22 @@ function logger<T extends new (...args: any[]) => any>(target: T, ctx: ClassDeco
 
 // metod decorator for greet
 function autobind(target: (...args: any[]) => any, ctx: ClassMethodDecoratorContext) {
-  console.log('target: ', target);
-  console.log('ctx: ', ctx);
+  // console.log('target: ', target);
+  // console.log('ctx: ', ctx);
 
   ctx.addInitializer(function (this: any) {//addInitializer is build in method. 
     //In arguments should be normal function (not arrow), and this function should have as argument "this: any"
     this[ctx.name] = this[ctx.name].bind(this);
   });
+
+  return function (this: any) { //this fn will replace the original method the decorator was added to.
+    // in this case greet() will remove
+    console.log('Executing of original function.');// it can be any other code (http-requests etc.)
+
+    // target() - this is original function, but not use it at the same time with addInitializer. 
+    // Because target is original method without modifications, so it has no sence to change it and then call original 
+    target.apply(this);// if you really need call original method - do it with binding 'this' - use apply.
+  }
 }
 
 @logger
