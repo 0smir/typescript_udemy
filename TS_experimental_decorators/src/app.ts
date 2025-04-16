@@ -72,6 +72,11 @@ console.log('Person inst', pers);
 It is not that decorators that run in runtime when you call the methods 
 */
 
+/**
+ * Decorators that's can return smth is: Methods, Accessors and Typescropt would use it.
+ * Decorators Propertyes and Parameters also can return smth, but TypeScript will ignore it. 
+ * Return values are not supported there or are not used to be precise.
+ */
 
 function Log(target: any, propertyName: string | Symbol) {
   console.log('============Property decorator ==============');
@@ -131,4 +136,37 @@ const product_2 = new Product('Book-2', 29);
 
 console.log(product_1);
 console.log(product_2);
+
+
+//====================== Example: Creating an "Autobind" Decorator ======================
+
+// function Autobind(target: any, methodName: string, descriptor: PropertyDescriptor) {
+function Autobind(_: any, _2: string, descriptor: PropertyDescriptor) {
+  const originalMethod = descriptor.value;
+  const adjDescriptor: PropertyDescriptor = {
+    configurable: true,
+    enumerable: false,
+    get() {
+      const boundFn = originalMethod.bind(this);
+      return boundFn;
+    }
+  };
+  return adjDescriptor;
+}
+
+class Printer {
+  message = 'This works!';
+
+  @Autobind
+  showMessage() {
+    console.log('message to print: ', this.message);
+
+  }
+}
+
+const printSmth = new Printer();
+const button = document.querySelector('button');
+
+// button?.addEventListener('click', printSmth.showMessage.bind(printSmth)); // tipical javascript solution
+button?.addEventListener('click', printSmth.showMessage);
 
