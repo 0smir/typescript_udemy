@@ -11,7 +11,7 @@ function Logger(logString: string) {
 function WithTemplate(template: string, hookId: string) {
   console.log('template Factory');
   // return function (_: Function) {//(_) replace 'constructor', due I know we get this argument, but I don't need it.
-  return function (constructor: any) {//(_) replace 'constructor', due I know we get this argument, but I don't need it.
+  return function (constructor: any) {
     console.log('Rendering template');
 
     const hookEl = document.getElementById(hookId);
@@ -24,8 +24,35 @@ function WithTemplate(template: string, hookId: string) {
 }
 
 
+/** In this case we remove original Class (Person) with new Class constructor which we return 
+ * in WithTemplate2 decorator. Since we call super() in WithTemplate2 - the original Class data was saved
+ * But after I replased original class by my custom Class, and thats allow us to add extra logic. 
+ * So we extends and replases the old/original Class.
+  */
+function WithTemplate2(template: any, hookId: string) {
+  return function <T extends { new(...args: any[]): { name: string } }>(originalConstructor: T) {
+    return class extends originalConstructor {
+      constructor(..._: any[]) {
+        super(); // you have to call super if you create Class which extends enoter Class
+        console.log('************rendering template WithTemplate2********');
+        const hookElement = document.getElementById(hookId);
+        // const p = new originalConstructor();
+        if (hookElement) {
+          const div = document.createElement('div');
+          div.innerHTML = template;
+          hookElement.append(div);
+          // hookElement.querySelector('p')!.textContent += p.name;
+          hookElement.querySelector('p')!.textContent += this.name;
+        }
+      }
+    }
+  }
+}
+
+
 // decorator will runs when it finds your class definition (constructor function definition)
 @Logger('LOGGING - PERSON') // @-character is a sign of decorator calling
+@WithTemplate2('<p>Title description: </p>', 'app')
 @WithTemplate('<h1>My Person object</h1>', 'app') //order of executing of decoretor (actual decorator functions) is bottom up (bottom runs first), but decoretor Factories run earlier
 class Person {
   name = "Helga";
@@ -35,7 +62,7 @@ class Person {
 }
 
 const pers = new Person();
-console.log(pers);
+console.log('Person inst', pers);
 
 
 //======================== Property Decorators ===============================
