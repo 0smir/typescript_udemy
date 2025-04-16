@@ -1,4 +1,4 @@
-
+//============================== Class Decorators ==============================
 function Logger(logString: string) {
   console.log('Logger Factory');
 
@@ -36,3 +36,72 @@ class Person {
 
 const pers = new Person();
 console.log(pers);
+
+
+//======================== Property Decorators ===============================
+
+
+/* All this types of decorators will execute when you defined the Class. 
+It is not that decorators that run in runtime when you call the methods 
+*/
+
+
+function Log(target: any, propertyName: string | Symbol) {
+  console.log('============Property decorator ==============');
+  console.log('target: ', target);
+  console.log('propertyName: ', propertyName);
+}
+
+function Log2(target: any, name: string, descriptor: PropertyDescriptor) {
+  console.log('============= Accessor Decorator ===============');
+  console.log(target); //in case of static properties target will return constructop finction
+  console.log(name);
+  console.log(descriptor);
+}
+
+function Log3(target: any, name: string | Symbol, descriptor: PropertyDescriptor) {
+  console.log('============= Method Decorator ===============');
+  console.log(target);
+  console.log(name);
+  console.log(descriptor);
+}
+
+function Log4(target: any, name: string | Symbol, position: number) {
+  console.log('============= Parameter Decorator ===============');
+  console.log(target);
+  console.log(name);
+  console.log(position);
+}
+
+class Product {
+  @Log
+  title: string;
+  private _price: number;
+
+  @Log2
+  set price(val: number) {
+    if (val > 0) {
+      this._price = val
+    } else {
+      throw new Error('Invalid price - should be positive.')
+    }
+  }
+
+  constructor(t: string, p: number) {
+    this.title = t;
+    this._price = p;
+  }
+
+  @Log3
+  getPriceWithTax(@Log4 tax: number) {
+    return this._price * (1 + tax);
+  }
+}
+
+
+const product_1 = new Product('Book', 19);
+const product_2 = new Product('Book-2', 29);
+
+console.log(product_1);
+console.log(product_2);
+
