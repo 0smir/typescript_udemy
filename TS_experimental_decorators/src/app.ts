@@ -86,7 +86,7 @@ function Log(target: any, propertyName: string | Symbol) {
 
 function Log2(target: any, name: string, descriptor: PropertyDescriptor) {
   console.log('============= Accessor Decorator ===============');
-  console.log(target); //in case of static properties target will return constructop finction
+  console.log(target); //in case of static properties target will return constructor finction
   console.log(name);
   console.log(descriptor);
 }
@@ -170,3 +170,81 @@ const button = document.querySelector('button');
 // button?.addEventListener('click', printSmth.showMessage.bind(printSmth)); // tipical javascript solution
 button?.addEventListener('click', printSmth.showMessage);
 
+//===========================================================
+interface ValidationConfig {
+  [property: string]: {
+    [validatable: string]: string[]// ['requerid', 'positive']
+  }
+}
+const registratedValidators: ValidationConfig = {};
+
+function Requerid(target: any, propName: string) {
+  registratedValidators[target.constructor.name] = {
+    ...registratedValidators[target.constructor.name],
+    [propName]: [...(registratedValidators[target.constructor.name]?.[propName] ?? []), 'required']
+  };
+}
+
+function PositiveNumber(target: any, propName: string) {
+  registratedValidators[target.constructor.name] = {
+    ...registratedValidators[target.constructor.name],
+    [propName]: [...(registratedValidators[target.constructor.name]?.[propName] ?? []), 'positive']
+  };
+}
+
+function validate(obj: any) {
+  const objValidatorConfig = registratedValidators[obj.constructor.name];
+  let isValid = true;
+
+
+  if (!objValidatorConfig) {
+    return true;
+  }
+
+  for (const prop in objValidatorConfig) {
+    for (const validator of objValidatorConfig[prop]) {
+      switch (validator) {
+        case 'requerid':
+          isValid = isValid && !!obj[prop];
+          break;
+        case 'positive':
+          isValid = isValid && obj[prop] > 0;
+          break;
+      }
+    }
+  }
+  return isValid;
+}
+
+class Course {
+  @Requerid
+  title: string;
+
+  @PositiveNumber
+  price: number;
+
+  constructor(t: string, p: number) {
+    this.title = t;
+    this.price = p;
+  }
+
+}
+
+const courseForm = document.querySelector('form');
+courseForm?.addEventListener('submit', event => {
+  event.preventDefault();
+  const titleEl = document.getElementById('title') as HTMLInputElement;
+  const priceEl = document.getElementById('price') as HTMLInputElement;
+
+  const title = titleEl?.value;
+  const price = +priceEl?.value;
+
+  const createCourse = new Course(title, price);
+  if (!validate(createCourse)) {
+    alert('Invalid input, please try again!');
+    return;
+  }
+  console.log(createCourse);
+
+})
+// Orcourse you can use npm package to validate your Classes https://github.com/typestack/class-validator
