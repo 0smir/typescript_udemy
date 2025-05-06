@@ -16,6 +16,42 @@ function autobind(
   return adjDescriptor;
 }
 
+//Validation
+interface Validatable {
+  value: string | number;
+  required?: boolean;
+  minLength?: number;
+  maxLength?: number;
+  min?: number;
+  max?: number;
+}
+
+
+//validation logic
+function validate(validatableInput: Validatable) {
+  let isValid = true;
+  if (validatableInput.required) {
+    isValid = isValid && (validatableInput.value.toString().trim().length !== 0);
+  }
+  if (validatableInput.minLength != null &&
+    typeof validatableInput.value === 'string') {
+    isValid = isValid && validatableInput.value.length > validatableInput.minLength;
+  }
+  if (validatableInput.maxLength != null &&
+    typeof validatableInput.value === 'string') {
+    isValid = isValid && validatableInput.value.length > validatableInput.maxLength;
+  }
+
+  if (validatableInput.min != null &&
+    typeof validatableInput.value === 'number') {
+    isValid = isValid && validatableInput.value > validatableInput.min;
+  }
+  if (validatableInput.max != null &&
+    typeof validatableInput.value === 'number') {
+    isValid = isValid && validatableInput.value <= validatableInput.max;
+  }
+  return isValid;
+}
 
 //Project Input Class
 class ProjectInput {
@@ -48,15 +84,36 @@ class ProjectInput {
     const enteredDescription = this.descriptionInputEl.value;
     const enteredPeople = this.peopleInputEl.value;
 
-    if (enteredTitle.trim().length === 0 ||
-      enteredDescription.trim().length === 0 ||
-      enteredPeople.trim().length === 0) {
+    const titleValidatable: Validatable = {
+      value: enteredTitle,
+      required: true
+    };
+
+    const descriptionValidatable: Validatable = {
+      value: enteredDescription,
+      required: true,
+      minLength: 5
+    };
+
+    const peopleValidatable: Validatable = {
+      value: +enteredPeople,
+      required: true,
+      min: 1,
+      max: 10
+    };
+    //validation
+    if (
+      !validate(titleValidatable) ||
+      !validate(descriptionValidatable) ||
+      !validate(peopleValidatable)
+    ) {
       alert('Invalid values, please check');
       return;
     } else {
       return [enteredTitle, enteredDescription, +enteredPeople];
     }
   }
+
   private clearInputs() {
     this.titleInputEl.value = '';
     this.descriptionInputEl.value = '';
@@ -72,7 +129,6 @@ class ProjectInput {
       console.log("title, description, people: ", title, description, people);
       this.clearInputs();
     }
-
   }
 
   private configure() {
