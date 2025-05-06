@@ -16,15 +16,28 @@ function autobind(
   return adjDescriptor;
 }
 
-// //Project Type
-// class Project {
+enum ProjectStatus { Active, Finished }
 
-// }
+//Project Type
+class Project {
+  constructor(
+    public id: string,
+    public title: string,
+    public description: string,
+    public people: number,
+    public status: ProjectStatus) {
+
+  }
+}
 
 //Project State Managment
+
+type Listener = (items: Project[]) => void;
+
+
 class ProjectState {
-  private listeners: any[] = [];
-  private projects: any[] = [];
+  private listeners: Listener[] = [];
+  private projects: Project[] = [];
   private static instance: ProjectState;
 
   private constructor() { }
@@ -37,20 +50,27 @@ class ProjectState {
     return this.instance;
   }
 
-  addListener(listenerFn: Function) {
+  addListener(listenerFn: Listener) {
     this.listeners.push(listenerFn);
   }
 
   addProject(title: string, description: string, numOfPeople: number) {
-    const newProject = {
-      id: Math.random().toString(),
-      title: title,
-      description: description,
-      people: numOfPeople
-    };
+    const newProject = new Project(
+      Math.random().toString(),
+      title,
+      description,
+      numOfPeople,
+      ProjectStatus.Active
+    );
+    // const newProject = {
+    //   id: Math.random().toString(),
+    //   title: title,
+    //   description: description,
+    //   people: numOfPeople
+    // };
     this.projects.push(newProject);
-    for (const lictenerFn of this.listeners) {
-      lictenerFn(this.projects.slice()); // with .slice() method we create a new copy of this.projects Array
+    for (const listenerFn of this.listeners) {
+      listenerFn(this.projects.slice()); // with .slice() method we create a new copy of this.projects Array
     }
   }
 }
@@ -99,7 +119,7 @@ class ProjectList {
   templateEl: HTMLTemplateElement;
   hostEl: HTMLDivElement;
   element: HTMLElement; //for section element
-  assignedProjects: any[];
+  assignedProjects: Project[];
 
   constructor(private type: 'active' | 'finished') {
     this.templateEl = document.getElementById('project-list')! as HTMLTemplateElement;
@@ -109,8 +129,15 @@ class ProjectList {
     this.element = importedNode.firstElementChild as HTMLElement;
     this.element.id = `${type}-projects`;
 
-    projectState.addListener((projects: any[]) => {
-      this.assignedProjects = projects;
+    projectState.addListener((projects: Project[]) => {
+      const relevantProjects = projects.filter(prj => {
+        if (this.type === 'active') {
+          return prj.status === ProjectStatus.Active;
+        }
+        return prj.status === ProjectStatus.Finished;
+      });
+      this.assignedProjects = relevantProjects;
+
       this.renderProjects();
     });
 
@@ -118,11 +145,12 @@ class ProjectList {
     this.renderContent();
   }
   private renderProjects() {
-    const ListEl = document.getElementById(`${this.type}-projects-list`);
+    const listEl = document.getElementById(`${this.type}-projects-list`);
+    listEl!.innerHTML = '';
     for (const projItem of this.assignedProjects) {
       const listItem = document.createElement('li');
       listItem.textContent = projItem.title;
-      ListEl?.appendChild(listItem);
+      listEl!.appendChild(listItem);
     }
   }
 
