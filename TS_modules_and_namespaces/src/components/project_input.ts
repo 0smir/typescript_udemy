@@ -4,7 +4,9 @@
 /// <reference path="../state/project_state.ts" />
 **/
 
-import { Component } from "./base_component.js";
+import ComponentDefault from "./base_component.js";//now you can use any other name different then 'Component'
+// import some_name from "./base_component.js";
+// import { Component } from "./base_component.js";// example named export (without default mark)
 // import { Validatable, validate } from "../util/validation.js";
 // import { autobind } from "../decorators/autobind.js";
 import * as Validation from "../util/validation.js"; // alias of all object items
@@ -14,11 +16,10 @@ import { projectState } from "../state/project_state.js";
 
 // namespace App {
 //Project Input Class
-export class ProjectInput extends Component<HTMLDivElement, HTMLFormElement> {
+export class ProjectInput extends ComponentDefault<HTMLDivElement, HTMLFormElement> {
   titleInputEl: HTMLInputElement;
   descriptionInputEl: HTMLInputElement;
   peopleInputEl: HTMLInputElement;
-
 
   constructor() {
     super('project-input', 'app', true, 'user-input');

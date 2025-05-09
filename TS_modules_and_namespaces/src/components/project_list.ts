@@ -7,7 +7,7 @@
 
 
 import { Project, ProjectStatus } from "../models/project_model.js";
-import { Component } from "./base_component.js";
+import ComponentDefault from "./base_component.js";
 import { autobind } from "../decorators/autobind.js";
 import { projectState } from "../state/project_state.js";
 import { ProjectItem } from "./project_item.js";
@@ -17,7 +17,7 @@ import { ProjectItem } from "./project_item.js";
 
 // namespace App {
 //ProjectList Class
-export class ProjectList extends Component<HTMLDivElement, HTMLElement> {
+export class ProjectList extends ComponentDefault<HTMLDivElement, HTMLElement> {
 
   assignedProjects: Project[];
 

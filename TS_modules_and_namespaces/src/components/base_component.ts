@@ -1,6 +1,7 @@
 // namespace App {
 //Component Base Class
-export abstract class Component<T extends HTMLElement, U extends HTMLElement> { // use generic to make class more flexible
+export const some_name = "some_test_name";
+export default abstract class Component<T extends HTMLElement, U extends HTMLElement> { // use generic to make class more flexible
   templateEl: HTMLTemplateElement;
   hostEl: T;// now we can spacify types of elements
   element: U; // now we can spacify types of elements
