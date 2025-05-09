@@ -11,13 +11,15 @@ import ComponentDefault from "./base_component.js";
 import { autobind } from "../decorators/autobind.js";
 import { projectState } from "../state/project_state.js";
 import { ProjectItem } from "./project_item.js";
+import { DragTarget } from "../models/drag_drop_interfaces.js"
 
 
 
 
 // namespace App {
 //ProjectList Class
-export class ProjectList extends ComponentDefault<HTMLDivElement, HTMLElement> {
+export class ProjectList extends ComponentDefault<HTMLDivElement, HTMLElement>
+  implements DragTarget {
 
   assignedProjects: Project[];
 

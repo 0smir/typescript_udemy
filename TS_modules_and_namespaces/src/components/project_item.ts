@@ -6,6 +6,7 @@
 **/
 import ComponentDefault from "./base_component.js";
 import { Draggable } from "../models/drag_drop_interfaces.js";
+// import{ type Draggable } from "../models/drag_drop_interfaces.js";// it's correct, some projects need to show directly type of imported object
 import { Project } from "../models/project_model.js";
 import { autobind } from "../decorators/autobind.js";
 
