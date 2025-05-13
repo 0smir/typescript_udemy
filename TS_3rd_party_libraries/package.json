@@ -1,0 +1,16 @@
+{
+  "name": "build",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@types/lodash": "^4.17.16",
+    "lodash": "^4.17.21"
+  }
+}
