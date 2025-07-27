@@ -1,0 +1,110 @@
+
+### Compiling the Entire Project / Multiple Files
+
+tsc --init ### use to create tsconfig.json file
+tsc ### runs to compile all ts files in project/folder (you should run in a correct folder)
+
+
+### Watch mode
+
+tsc <-file name> -w ### use as watcher 
+tsc <-file name> --watch ### use as watcher 
+tsc -w/--watch ### will compile js for all ts files
+
+### Including & Excluding Files
+
+1. To exclude some files from compilation You need to complite tsconfig.json.
+Add to compilerOptions "exclude" array:
+Example
+  "exclude": [
+    "analitics.ts",
+    "**/*.dev.ts" //will exclude all files in any folders with .dev.ts
+  ]
+In this case excluded files, will not compile to js-files
+
+2. To include files to compile you need to complite tsconfig.json.
+Please be careful, due if you add "include" array to tsconfig.json. it will compile only files from this array.
+In this case will be compilled app.ts only.
+ "include": [
+    "app.ts"
+  ]
+So even if you will run tsc -w you will get app.js only.And if you add "include" key , you will add to 
+this array all folders and files which you need to compile.
+
+Basicly will compiled include mines exclude. If we have some include folder and it subfolder in exclude,
+will be compilled without excluded subfolder. 
+example:
+  "exclude": [
+    "analitics/GTManalitics.ts"
+  ],
+  "include": [
+    "app.ts",
+    "analitics/*.ts"
+  ]
+Will be compilled all analitics files, but not "GTManalitics.ts".
+
+3. Files - option - will compile one file. When you use "files" in your tsconfig.json, TypeScript only includes exactly those files, and ignores the include glob.
+  "files": [
+    "some.ts",
+    "someOtherRendomFile.ts"
+  ] 
+
+
+### Setting  (compilerOptions)
+
+1.Compilation Target - you can choose which version of JS you'll get after compilation/
+
+2. Libs  - if libs is commented -  all DOM's API are avaliable (because it included by default).
+If libs is empty and uncommented- youl need to add DOM's API handle.
+example:
+"lib": [
+  "DOM",
+  "ES6",
+  "DOM.Iterable",
+  "ScriptHost"
+] 
+This list of libs is default and will behave as you don't specify "list" at all.
+
+3. "allowJs": true - Allow you to use JavaScript files in a compilation of TS. 
+So no metter it is *.js or *.ts file typeScript will compile it.
+
+4. "checkJs": true -   this this option it will not compile *.js files 
+but it will check sintaxis and report about errors.
+
+5. "sourceMap": true,  - Will generate file-name.js.map in browser will add as a sourse *.js and *.ts files
+It is mach more ease to debugging your code.
+
+6.  "outDir": "./dist" - create Dist folder and compile *.js files inside of directory. If inside of src-folder 
+you have sub-folders it will generate it same-named folder inside of Dist.
+
+7. "rootDir": "./src" - compile files from root dir
+
+8. "removeComments": true - remove comments from a compiled version
+
+9. "noEmit": true -check your file and report any potential errors, without creating an output files 
+
+10. "downlevelIteration": true - You should only terns it on only in case if you have for-loop in your code. This option
+created to resolve problems binded with old browser versions.
+
+11."noEmitOnError": false (default val) - If you have some problem in *.ts file it will show  error-message, 
+but generate *.js file. If option seted to true - TS jast show error-message, but will not compote any *.js-file.
+
+
+12. "strict": true, - it is de value of option and it meanth that all next options is "ON":
+
+"noImplicitAny": true       - it inshuers about parameters/values of function  was declarated in a correct way (for example type declaration)                 
+"strictNullChecks": true    -  it make TS strict regarding way you works with values that might potentially NULL value (for example buttons, buttons without (!))                   
+"strictFunctionTypes": true - use for a nish bugs: when assigning functions, check to ensure parameters and the return values are subtype-compatible.                    
+"strictBindCallApply": true - it check  on which function you calling call or bind make sense.                  
+"strictPropertyInitialization": true - importent when you working with Classes            
+"strictBuiltinIteratorReturn": true,             
+"noImplicitThis": true - it show worning message if you use THIS in a plase where it is not cleare where you refers to.                                       
+"alwaysStrict": true - this option add to all compiled files "use strict".
+
+13. Code Quality Options: 
+"noUnusedLocals": true     - if you have local (declarated inside of function) variable that is not used, you'll get warning.                       
+"noUnusedParameters": true - if you have function parameters that is not used, you'll get warning.
+"noImplicitReturns": true  - it follow if some branch of function condition not return anything , you should use return, but you didn't - it will show warning.
+"noFallthroughCasesInSwitch": true - show warning if your switch cases is not allow any value (for example you dont have default case)
+
+14.  Debugging with Visual Studio Code (ESLint, Prettir or ChromeDibagger extentions need to be installed)
